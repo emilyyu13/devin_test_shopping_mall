@@ -314,11 +314,14 @@ const getPaymentStatusClass = (status) => {
   return statusClasses[status] || 'text-gray-600'
 }
 
+// Use onMounted with client-only directive to prevent hydration mismatches
 onMounted(() => {
-  if (isAuthenticated.value) {
-    fetchOrders()
-  } else {
-    loading.value = false
+  if (process.client) {
+    if (isAuthenticated.value) {
+      fetchOrders()
+    } else {
+      loading.value = false
+    }
   }
 })
 </script>

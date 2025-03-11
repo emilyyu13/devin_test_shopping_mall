@@ -195,6 +195,8 @@ const formIsValid = computed(() => {
 
 const placeOrder = async () => {
   // In a real app, this would send the order to the backend
+  if (!process.client) return; // Prevent execution during SSR to avoid hydration mismatches
+  
   try {
     console.log('Creating order...');
     const orderData = {
@@ -246,10 +248,12 @@ const placeOrder = async () => {
     ordersStore.orders.push(mockOrder);
     
     // Manually persist orders to localStorage
-    if (process.client) {
+    try {
       const currentOrders = [...ordersStore.orders];
       localStorage.setItem('orders', JSON.stringify(currentOrders));
       console.log('Orders saved to localStorage:', currentOrders);
+    } catch (storageError) {
+      console.error('Error saving to localStorage:', storageError);
     }
     
     // Simulate API call delay
@@ -260,7 +264,7 @@ const placeOrder = async () => {
     orderSuccess.value = true
     
     // Navigate to orders page after successful order placement
-    // Use a shorter timeout and direct navigation to ensure it works
+    // Use a longer timeout to ensure orders are saved before navigation
     setTimeout(() => {
       console.log('Navigating to orders page...');
       // Use both methods to ensure navigation works
@@ -270,7 +274,7 @@ const placeOrder = async () => {
         console.error('Error with window.location:', e);
         navigateTo('/orders');
       }
-    }, 1000)
+    }, 1500)
   } catch (error) {
     console.error('Error creating order:', error)
   }
