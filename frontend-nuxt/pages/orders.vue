@@ -235,9 +235,14 @@ const fetchOrders = async () => {
     // if (!response.ok) throw new Error('Failed to fetch orders')
     // orders.value = await response.json()
     
-    // Using mock data for demonstration
-    await new Promise(resolve => setTimeout(resolve, 500)) // Simulate network delay
-    orders.value = mockOrders
+    // Check if there are orders in the store first
+    if (ordersStore.orders.length > 0) {
+      orders.value = ordersStore.orders
+    } else {
+      // Using mock data for demonstration if no orders exist yet
+      await new Promise(resolve => setTimeout(resolve, 500)) // Simulate network delay
+      orders.value = mockOrders
+    }
   } catch (err) {
     console.error('Error fetching orders:', err)
     error.value = 'Failed to load orders. Please try again later.'

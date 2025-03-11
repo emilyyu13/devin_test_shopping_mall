@@ -206,9 +206,41 @@ const placeOrder = async () => {
       payment_info: paymentInfo.value
     }
     
-    // Use the orders store to create the order
-    // In a real app, we would use:
-    // await ordersStore.createOrder(orderData)
+    // Create a mock order in the orders store
+    const mockOrderId = Math.floor(1000 + Math.random() * 9000)
+    const mockOrder = {
+      id: mockOrderId,
+      user_id: 1,
+      status: 'processing',
+      total_amount: cartTotal.value,
+      created_at: new Date().toISOString(),
+      order_items: cartItems.value.map(item => ({
+        id: Math.floor(Math.random() * 1000),
+        product_id: item.id,
+        product_name: item.name,
+        quantity: item.quantity,
+        price: item.price
+      })),
+      payment: {
+        id: Math.floor(Math.random() * 1000),
+        order_id: mockOrderId,
+        amount: cartTotal.value,
+        payment_method: 'Credit Card',
+        status: 'completed',
+        transaction_id: `txn_${Math.random().toString(36).substring(2, 15)}`
+      },
+      shipment: {
+        id: Math.floor(Math.random() * 1000),
+        order_id: mockOrderId,
+        status: 'processing',
+        tracking_number: `TRK${Math.random().toString(36).substring(2, 15).toUpperCase()}`,
+        carrier: 'UPS',
+        estimated_delivery: new Date(Date.now() + 4 * 24 * 60 * 60 * 1000).toISOString()
+      }
+    }
+    
+    // Add the mock order to the orders store
+    ordersStore.orders.push(mockOrder)
     
     // Simulate API call delay
     await new Promise(resolve => setTimeout(resolve, 1000))
