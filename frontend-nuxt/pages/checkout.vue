@@ -152,8 +152,10 @@
 <script setup>
 import { ref, computed } from 'vue'
 import { useCartStore } from '~/store/cart'
+import { useOrdersStore } from '~/store/orders'
 
 const cartStore = useCartStore()
+const ordersStore = useOrdersStore()
 
 const cartItems = computed(() => cartStore.cart)
 const cartTotal = computed(() => cartStore.cartTotal)
@@ -193,18 +195,34 @@ const formIsValid = computed(() => {
 
 const placeOrder = async () => {
   // In a real app, this would send the order to the backend
-  // For now, just simulate a successful order
-  
-  // Simulate API call delay
-  await new Promise(resolve => setTimeout(resolve, 1000))
-  
-  // Clear cart and show success message
-  cartStore.clearCart()
-  orderSuccess.value = true
-  
-  // In a real app, we would navigate to an order confirmation page
-  setTimeout(() => {
-    navigateTo('/')
-  }, 2000)
+  try {
+    const orderData = {
+      items: cartItems.value.map(item => ({
+        product_id: item.id,
+        quantity: item.quantity,
+        price: item.price
+      })),
+      shipping_info: shippingInfo.value,
+      payment_info: paymentInfo.value
+    }
+    
+    // Use the orders store to create the order
+    // In a real app, we would use:
+    // await ordersStore.createOrder(orderData)
+    
+    // Simulate API call delay
+    await new Promise(resolve => setTimeout(resolve, 1000))
+    
+    // Clear cart and show success message
+    cartStore.clearCart()
+    orderSuccess.value = true
+    
+    // In a real app, we would navigate to an order confirmation page
+    setTimeout(() => {
+      navigateTo('/orders')
+    }, 2000)
+  } catch (error) {
+    console.error('Error creating order:', error)
+  }
 }
 </script>

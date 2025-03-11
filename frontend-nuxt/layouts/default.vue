@@ -10,6 +10,7 @@
             <span>Cart ({{ cartItemCount }})</span>
           </NuxtLink>
           <template v-if="isAuthenticated">
+            <NuxtLink to="/orders" class="hover:text-blue-200">My Orders</NuxtLink>
             <span>{{ user?.name }}</span>
             <button @click="logout" class="hover:text-blue-200">Logout</button>
           </template>

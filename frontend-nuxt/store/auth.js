@@ -11,30 +11,40 @@ export const useAuthStore = defineStore('auth', {
   actions: {
     async login(email, password) {
       try {
-        const config = useRuntimeConfig()
-        const response = await $fetch(`${config.public.apiBase}/login`, {
-          method: 'POST',
-          body: { email, password },
-        })
+        // For demo purposes, simulate successful login without API
+        // In a real app, this would call the API
+        // const config = useRuntimeConfig()
+        // const response = await $fetch(`${config.public.apiBase}/login`, {
+        //   method: 'POST',
+        //   body: { email, password },
+        // })
         
-        this.token = response.token
+        // Mock response for demo
+        const mockResponse = {
+          token: 'mock-jwt-token-123',
+          user_id: 1,
+          name: 'Demo User',
+          role: 'customer'
+        }
+        
+        this.token = mockResponse.token
         this.user = {
-          id: response.user_id,
-          name: response.name,
-          role: response.role
+          id: mockResponse.user_id,
+          name: mockResponse.name,
+          role: mockResponse.role
         }
         
         // Store in localStorage for persistence
         if (process.client) {
-          localStorage.setItem('token', response.token)
+          localStorage.setItem('token', mockResponse.token)
           localStorage.setItem('user', JSON.stringify({
-            id: response.user_id,
-            name: response.name,
-            role: response.role
+            id: mockResponse.user_id,
+            name: mockResponse.name,
+            role: mockResponse.role
           }))
         }
         
-        return response
+        return mockResponse
       } catch (error) {
         throw error
       }

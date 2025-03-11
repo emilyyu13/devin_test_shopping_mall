@@ -61,7 +61,7 @@ const login = async () => {
   
   try {
     await authStore.login(email.value, password.value)
-    navigateTo('/')
+    navigateTo('/orders')
   } catch (err) {
     error.value = err.message || 'Failed to login. Please check your credentials.'
   } finally {
