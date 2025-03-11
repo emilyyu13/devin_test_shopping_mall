@@ -1,0 +1,210 @@
+<template>
+  <div>
+    <h1 class="text-3xl font-bold mb-6">Checkout</h1>
+    
+    <div v-if="cartItems.length === 0" class="text-center py-8 bg-gray-50 rounded-lg">
+      <p class="text-gray-500 mb-4">Your cart is empty. Please add items before checkout.</p>
+      <NuxtLink to="/" class="text-blue-600 hover:text-blue-800">Continue Shopping</NuxtLink>
+    </div>
+    
+    <div v-else class="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div class="md:col-span-2">
+        <div class="bg-white rounded-lg shadow-md p-6 mb-6">
+          <h2 class="text-xl font-semibold mb-4">Shipping Information</h2>
+          
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+            <div>
+              <label class="block text-gray-700 mb-1">Full Name</label>
+              <input 
+                v-model="shippingInfo.name"
+                type="text" 
+                class="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:border-blue-500"
+              />
+            </div>
+            <div>
+              <label class="block text-gray-700 mb-1">Email</label>
+              <input 
+                v-model="shippingInfo.email"
+                type="email" 
+                class="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:border-blue-500"
+              />
+            </div>
+          </div>
+          
+          <div class="mb-4">
+            <label class="block text-gray-700 mb-1">Address</label>
+            <input 
+              v-model="shippingInfo.address"
+              type="text" 
+              class="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:border-blue-500"
+            />
+          </div>
+          
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div>
+              <label class="block text-gray-700 mb-1">City</label>
+              <input 
+                v-model="shippingInfo.city"
+                type="text" 
+                class="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:border-blue-500"
+              />
+            </div>
+            <div>
+              <label class="block text-gray-700 mb-1">State</label>
+              <input 
+                v-model="shippingInfo.state"
+                type="text" 
+                class="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:border-blue-500"
+              />
+            </div>
+            <div>
+              <label class="block text-gray-700 mb-1">Postal Code</label>
+              <input 
+                v-model="shippingInfo.postalCode"
+                type="text" 
+                class="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:border-blue-500"
+              />
+            </div>
+          </div>
+        </div>
+        
+        <div class="bg-white rounded-lg shadow-md p-6">
+          <h2 class="text-xl font-semibold mb-4">Payment Information</h2>
+          
+          <div class="mb-4">
+            <label class="block text-gray-700 mb-1">Card Number</label>
+            <input 
+              v-model="paymentInfo.cardNumber"
+              type="text" 
+              class="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:border-blue-500"
+              placeholder="**** **** **** ****"
+            />
+          </div>
+          
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div>
+              <label class="block text-gray-700 mb-1">Expiration Month</label>
+              <input 
+                v-model="paymentInfo.expiryMonth"
+                type="text" 
+                class="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:border-blue-500"
+                placeholder="MM"
+              />
+            </div>
+            <div>
+              <label class="block text-gray-700 mb-1">Expiration Year</label>
+              <input 
+                v-model="paymentInfo.expiryYear"
+                type="text" 
+                class="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:border-blue-500"
+                placeholder="YY"
+              />
+            </div>
+            <div>
+              <label class="block text-gray-700 mb-1">CVV</label>
+              <input 
+                v-model="paymentInfo.cvv"
+                type="text" 
+                class="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:border-blue-500"
+                placeholder="***"
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="md:col-span-1">
+        <div class="bg-white rounded-lg shadow-md p-6 sticky top-6">
+          <h2 class="text-xl font-semibold mb-4">Order Summary</h2>
+          
+          <div class="mb-4">
+            <div v-for="item in cartItems" :key="item.id" class="flex justify-between py-2 border-b border-gray-200">
+              <div>
+                <p>{{ item.name }}</p>
+                <p class="text-sm text-gray-500">Qty: {{ item.quantity }}</p>
+              </div>
+              <p>${{ (item.price * item.quantity).toFixed(2) }}</p>
+            </div>
+          </div>
+          
+          <div class="flex justify-between py-2 font-semibold">
+            <p>Total</p>
+            <p>${{ cartTotal.toFixed(2) }}</p>
+          </div>
+          
+          <button 
+            @click="placeOrder"
+            class="w-full bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 mt-4"
+            :disabled="!formIsValid"
+          >
+            Place Order
+          </button>
+          
+          <p v-if="orderSuccess" class="text-green-600 mt-4 text-center">
+            Order placed successfully!
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</template>
+
+<script setup>
+import { ref, computed } from 'vue'
+import { useCartStore } from '~/store/cart'
+
+const cartStore = useCartStore()
+
+const cartItems = computed(() => cartStore.cart)
+const cartTotal = computed(() => cartStore.cartTotal)
+
+const shippingInfo = ref({
+  name: '',
+  email: '',
+  address: '',
+  city: '',
+  state: '',
+  postalCode: ''
+})
+
+const paymentInfo = ref({
+  cardNumber: '',
+  expiryMonth: '',
+  expiryYear: '',
+  cvv: ''
+})
+
+const orderSuccess = ref(false)
+
+const formIsValid = computed(() => {
+  return (
+    shippingInfo.value.name &&
+    shippingInfo.value.email &&
+    shippingInfo.value.address &&
+    shippingInfo.value.city &&
+    shippingInfo.value.state &&
+    shippingInfo.value.postalCode &&
+    paymentInfo.value.cardNumber &&
+    paymentInfo.value.expiryMonth &&
+    paymentInfo.value.expiryYear &&
+    paymentInfo.value.cvv
+  )
+})
+
+const placeOrder = async () => {
+  // In a real app, this would send the order to the backend
+  // For now, just simulate a successful order
+  
+  // Simulate API call delay
+  await new Promise(resolve => setTimeout(resolve, 1000))
+  
+  // Clear cart and show success message
+  cartStore.clearCart()
+  orderSuccess.value = true
+  
+  // In a real app, we would navigate to an order confirmation page
+  setTimeout(() => {
+    navigateTo('/')
+  }, 2000)
+}
+</script>
