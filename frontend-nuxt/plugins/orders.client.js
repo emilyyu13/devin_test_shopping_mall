@@ -1,29 +1,25 @@
-import { useAuthStore } from '~/store/auth'
-import { useCartStore } from '~/store/cart'
 import { useOrdersStore } from '~/store/orders'
 
 export default defineNuxtPlugin(nuxtApp => {
-  const authStore = useAuthStore()
-  const cartStore = useCartStore()
   const ordersStore = useOrdersStore()
   
-  // Initialize auth state from localStorage
-  authStore.initializeAuth()
-  
-  // Initialize cart state from localStorage
-  cartStore.initializeCart()
-  
-  // Initialize orders from localStorage
+  // Initialize orders state from localStorage if available
   if (process.client) {
     const savedOrders = localStorage.getItem('orders')
     if (savedOrders) {
       try {
         const parsedOrders = JSON.parse(savedOrders)
-        console.log('Initializing orders from localStorage:', parsedOrders)
         ordersStore.orders = parsedOrders
       } catch (error) {
         console.error('Error parsing saved orders:', error)
       }
     }
   }
+  
+  // Watch for changes to orders and save to localStorage
+  watch(() => ordersStore.orders, (newOrders) => {
+    if (process.client) {
+      localStorage.setItem('orders', JSON.stringify(newOrders))
+    }
+  }, { deep: true })
 })

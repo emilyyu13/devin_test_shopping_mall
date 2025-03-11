@@ -226,6 +226,7 @@ const fetchOrders = async () => {
   error.value = null
   
   try {
+    console.log('Fetching orders...');
     // In a real app, this would be an API call
     // const response = await fetch(`${config.public.apiBase}/orders`, {
     //   headers: {
@@ -237,17 +238,36 @@ const fetchOrders = async () => {
     
     // Check if there are orders in the store first
     if (ordersStore.orders.length > 0) {
-      orders.value = ordersStore.orders
+      console.log('Using orders from store:', ordersStore.orders);
+      orders.value = ordersStore.orders;
     } else {
+      // Try to get orders from localStorage directly
+      if (process.client) {
+        const savedOrders = localStorage.getItem('orders');
+        if (savedOrders) {
+          try {
+            const parsedOrders = JSON.parse(savedOrders);
+            console.log('Using orders from localStorage:', parsedOrders);
+            orders.value = parsedOrders;
+            // Also update the store
+            ordersStore.orders = parsedOrders;
+            return;
+          } catch (error) {
+            console.error('Error parsing saved orders:', error);
+          }
+        }
+      }
+      
       // Using mock data for demonstration if no orders exist yet
-      await new Promise(resolve => setTimeout(resolve, 500)) // Simulate network delay
-      orders.value = mockOrders
+      console.log('Using mock orders data');
+      await new Promise(resolve => setTimeout(resolve, 500)); // Simulate network delay
+      orders.value = mockOrders;
     }
   } catch (err) {
-    console.error('Error fetching orders:', err)
-    error.value = 'Failed to load orders. Please try again later.'
+    console.error('Error fetching orders:', err);
+    error.value = 'Failed to load orders. Please try again later.';
   } finally {
-    loading.value = false
+    loading.value = false;
   }
 }
 

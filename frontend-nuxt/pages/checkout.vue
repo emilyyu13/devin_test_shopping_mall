@@ -196,6 +196,7 @@ const formIsValid = computed(() => {
 const placeOrder = async () => {
   // In a real app, this would send the order to the backend
   try {
+    console.log('Creating order...');
     const orderData = {
       items: cartItems.value.map(item => ({
         product_id: item.id,
@@ -206,7 +207,7 @@ const placeOrder = async () => {
       payment_info: paymentInfo.value
     }
     
-    // Create a mock order in the orders store
+    // Create a mock order
     const mockOrderId = Math.floor(1000 + Math.random() * 9000)
     const mockOrder = {
       id: mockOrderId,
@@ -239,8 +240,17 @@ const placeOrder = async () => {
       }
     }
     
+    console.log('Mock order created:', mockOrder);
+    
     // Add the mock order to the orders store
-    ordersStore.orders.push(mockOrder)
+    ordersStore.orders.push(mockOrder);
+    
+    // Manually persist orders to localStorage
+    if (process.client) {
+      const currentOrders = [...ordersStore.orders];
+      localStorage.setItem('orders', JSON.stringify(currentOrders));
+      console.log('Orders saved to localStorage:', currentOrders);
+    }
     
     // Simulate API call delay
     await new Promise(resolve => setTimeout(resolve, 1000))
@@ -252,14 +262,15 @@ const placeOrder = async () => {
     // Navigate to orders page after successful order placement
     // Use a shorter timeout and direct navigation to ensure it works
     setTimeout(() => {
+      console.log('Navigating to orders page...');
       // Use both methods to ensure navigation works
       try {
-        window.location.href = '/orders'
+        window.location.href = '/orders';
       } catch (e) {
-        console.error('Error with window.location:', e)
-        navigateTo('/orders')
+        console.error('Error with window.location:', e);
+        navigateTo('/orders');
       }
-    }, 500)
+    }, 1000)
   } catch (error) {
     console.error('Error creating order:', error)
   }
