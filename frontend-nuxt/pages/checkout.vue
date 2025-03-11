@@ -217,10 +217,17 @@ const placeOrder = async () => {
     cartStore.clearCart()
     orderSuccess.value = true
     
-    // In a real app, we would navigate to an order confirmation page
+    // Navigate to orders page after successful order placement
+    // Use a shorter timeout and direct navigation to ensure it works
     setTimeout(() => {
-      navigateTo('/orders')
-    }, 2000)
+      // Use both methods to ensure navigation works
+      try {
+        window.location.href = '/orders'
+      } catch (e) {
+        console.error('Error with window.location:', e)
+        navigateTo('/orders')
+      }
+    }, 500)
   } catch (error) {
     console.error('Error creating order:', error)
   }
