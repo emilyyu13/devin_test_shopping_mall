@@ -1,78 +1,75 @@
-# Implementation Summary
+# Online Shopping Mall System Implementation
 
 ## Overview
-This project implements an online shopping mall system with a Nuxt.js frontend and Ruby on Rails backend. The system includes comprehensive features for stock management, payment processing, and logistics functionality.
-
-## Frontend Implementation (Nuxt.js)
-
-### Core Features
-- **Product Browsing**: Grid layout of products with images, descriptions, and prices
-- **Shopping Cart**: Add/remove items with quantity management and price calculation
-- **Checkout Process**: Multi-step checkout with shipping and payment information
-- **User Authentication**: Login functionality with state persistence
-
-### Technical Implementation
-- **Framework**: Nuxt.js 3
-- **State Management**: Pinia store modules for auth, cart, and products
-- **Styling**: Tailwind CSS for responsive design
-- **API Communication**: Configured to connect with the Rails backend
-
-### Pages
-- **Home**: Landing page with featured products
-- **Products**: Grid display of all available products
-- **Cart**: Shopping cart with item management
-- **Checkout**: Multi-step checkout process
-- **Login**: User authentication
+This project implements a comprehensive online shopping mall system with:
+- **Frontend**: Vue.js with Vite, Vuex state management, and Tailwind CSS
+- **Backend**: Ruby on Rails API with SQLite3 database
+- **Features**: Stock management, payment processing, and logistics functionality
 
 ## Backend Implementation (Ruby on Rails)
 
-### Core Features
-- **Stock Management**: Product inventory tracking with automatic stock updates
-- **Payment Processing**: Payment handling with multiple payment methods and statuses
-- **Logistics**: Shipment tracking with carrier integration and delivery estimation
-
-### Technical Implementation
-- **Framework**: Ruby on Rails 7.1.3
-- **Database**: SQLite3 for development, PostgreSQL for production
-- **API**: RESTful API with versioning (v1)
-- **Authentication**: Token-based authentication
-
-### Models
-- **User**: Customer accounts with authentication
-- **Product**: Product information with stock management
+### Core Models
+- **User**: Authentication and user management
+- **Product**: Inventory and stock management
 - **Order & OrderItem**: Purchase tracking and management
-- **Payment**: Transaction processing and status tracking
-- **Shipment**: Logistics tracking and delivery estimation
+- **Payment**: Transaction processing with multiple payment methods
+- **Shipment**: Logistics tracking with carrier integration
 - **ShippingAddress**: Customer delivery information
 
-## API Endpoints
+### API Endpoints
+- **Products API**: Browse and manage inventory
+- **Orders API**: Purchase management
+- **Payments API**: Transaction processing
+- **Shipments API**: Logistics tracking
+- **Authentication API**: User login and registration
 
-### Products
-- `GET /api/v1/products`: List all products
-- `GET /api/v1/products/:id`: Get product details
-- `POST /api/v1/products`: Create a new product (admin)
-- `PUT /api/v1/products/:id`: Update a product (admin)
-- `DELETE /api/v1/products/:id`: Delete a product (admin)
+### Key Features
+- **Stock Management**: Automatic inventory tracking and updates
+- **Payment Processing**: Multiple payment methods with status tracking
+- **Logistics Handling**: Shipment tracking with delivery estimation
 
-### Orders
-- `GET /api/v1/orders`: List user orders
-- `GET /api/v1/orders/:id`: Get order details
-- `POST /api/v1/orders`: Create a new order
-- `PUT /api/v1/orders/:id`: Update order status
+## Frontend Implementation (Vue.js)
 
-### Payments
-- `POST /api/v1/orders/:order_id/payments`: Process payment for an order
-- `GET /api/v1/orders/:order_id/payments/:id`: Get payment details
+### Pages
+- **Home**: Product browsing and filtering
+- **Cart**: Shopping cart management
+- **Checkout**: Order placement with shipping and payment
+- **Login**: User authentication
 
-### Shipments
-- `POST /api/v1/orders/:order_id/shipments`: Create shipment for an order
-- `GET /api/v1/orders/:order_id/shipments/:id`: Get shipment details
-- `PUT /api/v1/orders/:order_id/shipments/:id`: Update shipment status
+### State Management
+- **Vuex Store**: Centralized state management for products, cart, and user
+- **Local Storage**: Persistent cart and authentication
+
+### UI Components
+- **Product Cards**: Display product information with add-to-cart functionality
+- **Cart Summary**: Show cart items with quantity management
+- **Checkout Form**: Collect shipping and payment information
+- **Navigation**: User-friendly site navigation
+
+## How to Run
+
+### Backend
+```bash
+cd backend
+bin/rails server -p 3001
+```
+
+### Frontend
+```bash
+cd frontend
+npm run dev
+```
+
+Access the application at http://localhost:8001
+
+## Testing
+The system includes comprehensive testing for both frontend and backend:
+- Backend API endpoints tested with curl commands
+- Frontend functionality tested through browser interaction
 
 ## Future Enhancements
-- User registration functionality
+- User registration and profile management
 - Product search and filtering
+- Order history and tracking
 - Admin dashboard for inventory management
-- Order history and tracking for customers
 - Payment gateway integration
-- Real-time shipment tracking

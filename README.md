@@ -6,6 +6,7 @@
 
 ## Technologies
 - Frontend: Nuxt.js 3
+
 - Backend: Ruby on Rails 7.1.3 with Ruby 3.2.3
 - Database: SQLite3 (development), PostgreSQL (production)
 - Features: Stock management, Payment processing, Logistics functionality
