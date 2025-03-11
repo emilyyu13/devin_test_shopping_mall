@@ -1,0 +1,24 @@
+{
+  "name": "shopping-mall-frontend",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "nuxt build",
+    "dev": "nuxt dev",
+    "generate": "nuxt generate",
+    "preview": "nuxt preview",
+    "postinstall": "nuxt prepare"
+  },
+  "devDependencies": {
+    "@tailwindcss/postcss7-compat": "^2.2.17",
+    "nuxt": "^3.10.0",
+    "postcss": "^8.5.3"
+  },
+  "dependencies": {
+    "@pinia/nuxt": "^0.10.1",
+    "autoprefixer": "^10.4.21",
+    "axios": "^1.8.2",
+    "pinia": "^3.0.1",
+    "tailwindcss": "^4.0.12"
+  }
+}
