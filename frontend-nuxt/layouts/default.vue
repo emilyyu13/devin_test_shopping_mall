@@ -5,6 +5,7 @@
         <NuxtLink to="/" class="text-2xl font-bold">Shopping Mall</NuxtLink>
         <nav class="flex items-center space-x-6">
           <NuxtLink to="/" class="hover:text-blue-200">Home</NuxtLink>
+          <NuxtLink to="/products" class="hover:text-blue-200">Products</NuxtLink>
           <NuxtLink to="/cart" class="flex items-center hover:text-blue-200">
             <span>Cart ({{ cartItemCount }})</span>
           </NuxtLink>
